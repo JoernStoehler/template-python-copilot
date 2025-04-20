@@ -4,6 +4,7 @@ A quick reference to all available documentation files:
 
 - [README.md](../README.md) - Project overview and quick start guide.
 - [project.md](project.md) - Development workflow, tools, and project structure.
+- [project_tooling.md](project_tooling.md) - Overview of devtools and libraries used.
 - [commit.md](commit.md) - Guidelines for making effective small commits.
 - [pullrequest.md](pullrequest.md) - Process for submitting and reviewing larger changes.
 - [codestyle.md](codestyle.md) - Coding standards and conventions with examples.
