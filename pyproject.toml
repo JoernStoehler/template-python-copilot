@@ -1,0 +1,90 @@
+[tool.poetry]
+name = "jax-abm"
+version = "0.0.1"
+description = "GPU-accelerated reproduction of paper 2409.18760"
+authors = ["Joern Stoehler <joern.stoehler@example.com>"]
+packages = [{ include = "src" }]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/JoernStoehler/paper-2409.18760-econ"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+jax = {version = "^0.4.26", extras = ["cuda11_pip"]}
+flax = "^0.8.2"
+optax = "^0.2.3"
+pandas = "^2.2"
+polars = "^0.20"
+typer = "^0.9"
+pyyaml = "^6.0"
+matplotlib = "^3.8"
+networkx = "^3.1"
+ipython = "^8.18"
+jaxtyping = "^0.3.1"
+python-dotenv = "^1.1.0"
+google-genai = "^1.11.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+hypothesis = "^6.97"
+ruff = "^0.4"
+pre-commit = "^3.7"
+nbstripout = "^0.6"
+pytest-cov = "^4.1"
+pytest-xdist = "^3.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+# File exclusions
+exclude = [
+    ".git",
+    ".venv",
+    "build",
+    "dist",
+]
+
+# Configure linter
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "PIE", "PL", "RUF", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/latex_to_md.py" = ["PLR0913", "PLR0912", "PLR0915"]  # Ignore function complexity rules for this script
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+    # Typer function calls allowed in argument defaults
+    "typer.Argument",
+    "typer.Option",
+    "typer.Typer"
+]
+
+# Configure formatter
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "--cov=src --cov-report=term-missing:skip-covered --jaxtyping-packages=src,beartype.beartype"
+markers = [
+    "perf: marks tests as performance benchmarks (deselect with '-m \"not perf\"')",
+    "calib: marks tests as calibration benchmarks (skipped by default)",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "pass",
+    "raise ImportError",
+]
