@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -34,8 +34,8 @@ jobs:
       - name: Run Ruff (linting)
         run: poetry run ruff check src tests scripts
 
-  test-cpu:
-    name: Test (CPU)
+  test:
+    name: Test
     needs: lint
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +44,7 @@ jobs:
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -52,43 +52,14 @@ jobs:
           version: 1.7.1
           virtualenvs-create: true
 
-      - name: Install dependencies (CPU)
-        run: |
-          poetry add --group main "jax[cpu]>=0.4.26" --optional
-          poetry install --with dev --no-interaction
+      - name: Install dependencies
+        run: poetry install --with dev --no-interaction
 
-      - name: Run all tests
-        run: poetry run pytest -xvs -n auto tests/unit tests/stochastic tests/e2e -k "not calib" --cov=src --cov-report=xml
+      - name: Run tests
+        run: poetry run pytest -xvs tests --cov=src --cov-report=xml
 
-  smoke-gpu:
-    name: Smoke Test (GPU)
-    needs: test-cpu
-    runs-on: ubuntu-latest
-    container:
-      image: nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
-      options: --gpus all
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install system dependencies
-        run: |
-          apt-get update
-          apt-get install -y python3.12 python3-pip git curl
-
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Install dependencies (CUDA)
-        run: |
-          poetry install --with dev --no-interaction
-
-      - name: Run smoke simulation
-        run: |
-          mkdir -p data/public
-          python -m src.cli simulate configs/aut.yaml --steps 4 --seed 42 --device cuda
-
-      - name: Report GPU info
-        if: always()
-        run: nvidia-smi
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

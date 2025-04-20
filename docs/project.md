@@ -1,31 +1,29 @@
 # Project Structure and Tooling
 
-This document provides a simple overview of the project structure, development workflow, and tooling for new developers joining the project.
+This document provides a simple overview of the project structure, development workflow, and tooling for developers using this template.
 
 ## Project Structure
 
-The project follows a clean, standard Python package layout:
+This template follows a clean, standard Python package layout:
 
 ```
-paper-2409.18760-econ/
-├── configs/             # Configuration files for simulations
+python-project-template/
 ├── data/                # Data storage directory
-│   ├── private/         # Private data (not committed)
-│   └── public/          # Public datasets
+│   ├── raw/             # Raw data files
+│   ├── processed/       # Processed data files
+│   └── saved/           # Output data files
 ├── docs/                # Documentation
+│   ├── index.md         # Documentation index
+│   ├── codestyle.md     # Coding standards
+│   └── ...              # Other documentation
 ├── notebooks/           # Jupyter notebooks
-├── scripts/             # Domain-specific utility scripts
+├── scripts/             # Utility scripts
 ├── src/                 # Source code package
-│   ├── calibrate/       # Calibration modules
-│   ├── core/            # Core simulation modules
-│   │   └── kernels/     # JAX computation kernels
-│   ├── data/            # Data processing modules
-│   │   └── download/    # Data downloader modules
-│   └── utils/           # Utility modules
+│   ├── __init__.py      # Package initialization
+│   └── main.py          # Main module
 └── tests/               # Test directory
-    ├── e2e/             # End-to-end tests
-    ├── stochastic/      # Stochastic simulation tests
-    └── unit/            # Unit tests
+    ├── __init__.py      # Test package initialization
+    └── test_main.py     # Tests for main module
 ```
 
 ## Development Environment
@@ -58,37 +56,30 @@ This project uses Poetry for dependency management and packaging.
 - **Formatting code**:
 
   ```bash
-  ruff format src tests scripts
+  poetry run ruff format src tests scripts
   ```
 
 - **Linting code**:
 
   ```bash
-  ruff check src tests scripts
+  poetry run ruff check src tests scripts
   ```
 
 - **Running tests**:
 
   ```bash
-  pytest
+  poetry run pytest
   ```
 
 - **Running tests with coverage**:
 
   ```bash
-  pytest --cov=src
+  poetry run pytest --cov=src
   ```
 
 - **Running tests in parallel** (faster):
   ```bash
-  pytest -xvs -n auto
-  ```
-
-### Data Management
-
-- **Download economic data**:
-  ```bash
-  python -m src.data.download.oecd --country AUT --start 1990
+  poetry run pytest -xvs -n auto
   ```
 
 ### Cleaning
@@ -101,20 +92,13 @@ This project uses Poetry for dependency management and packaging.
   find . -type d -name ".eggs" -exec rm -rf {} +
   ```
 
-### Running the Application
-
-- **Run the simulation**:
-  ```bash
-  python -m src.cli simulate configs/aut.yaml --steps 100 --seed 42
-  ```
-
 ## Code Quality Tools
 
 The project uses modern Python tooling to maintain code quality:
 
 ### Formatting and Linting
 
-- **Ruff**: All-in-one Python linter and formatter (replaces Black)
+- **Ruff**: All-in-one Python linter and formatter
   - Enforces code style (PEP 8)
   - Manages import sorting
   - Finds code issues and bugs
@@ -124,8 +108,7 @@ The project uses modern Python tooling to maintain code quality:
 
 - **pytest**: Testing framework with coverage reporting
 - Test markers:
-  - `perf`: Performance benchmark tests
-  - `calib`: Calibration benchmark tests (skipped by default)
+  - `perf`: Performance benchmark tests (deselect with '-m "not perf"')
 
 ### Pre-commit Hooks
 
@@ -142,22 +125,4 @@ The following checks run automatically before each commit:
 CI is implemented with GitHub Actions and runs on pushes to main and pull requests:
 
 1. **Linting**: Runs Ruff checks
-2. **CPU Testing**: Runs unit, stochastic, and e2e tests (excluding calibration)
-3. **GPU Smoke Test**: Tests that the simulation runs on GPU
-
-## Safe Committing Practices
-
-To ensure high-quality commits:
-
-1. Make focused changes addressing a single issue or feature
-2. Run tests locally before committing:
-   ```bash
-   pytest
-   ```
-3. Let pre-commit hooks run to catch formatting and linting issues
-4. Use descriptive commit messages
-5. For large changes, create a pull request and request a review
-
-## Working with Notebooks
-
-Notebook outputs are automatically stripped before committing using nbstripout to keep the repository clean and avoid unnecessary diffs.
+2. **Testing**: Runs unit tests with coverage reporting

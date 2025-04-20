@@ -1,3 +1,5 @@
+# Python gitignore for template-python-copilot
+
 # Python
 __pycache__/
 *.py[cod]
@@ -30,10 +32,9 @@ env.bak/
 venv.bak/
 
 # Poetry
-poetry.lock
+# poetry.lock  # Uncomment if you want to ignore lock file
 
 # Data files
-.env
 data/processed/*
 data/raw/*
 data/saved/*
@@ -44,11 +45,11 @@ data/saved/*
 # Jupyter notebooks
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
-*.ipynb
+# *.ipynb  # Removed to allow notebook tracking
 
 # IDE configurations
 .idea/
-#.vscode/
+# .vscode/  # VS Code settings should be tracked for template
 *.swp
 *.swo
 

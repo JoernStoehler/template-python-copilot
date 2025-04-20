@@ -2,10 +2,11 @@
     "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
     "[markdown]": {
-        "editor.tabSize": 2, // markdown specific
+        "editor.tabSize": 2
     },
     "[python]": {
         "editor.tabSize": 4,
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
     "editor.indentSize": "tabSize",
     "editor.insertSpaces": true,
@@ -14,4 +15,10 @@
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
     "editor.wordWrap": "on",
+    "editor.rulers": [88],
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "python.testing.pytestEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true
 }

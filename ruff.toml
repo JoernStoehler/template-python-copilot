@@ -1,0 +1,31 @@
+# Ruff configuration file
+
+line-length = 88
+target-version = "py312"
+# File exclusions
+exclude = [".git", ".venv", "build", "dist"]
+
+# Configure linter
+[lint]
+select = ["E", "F", "I", "UP", "B", "C4", "PIE", "PL", "RUF", "W"]
+
+[lint.per-file-ignores]
+"scripts/*.py" = [
+    "PLR0913",
+    "PLR0912",
+    "PLR0915",
+] # Ignore function complexity rules for scripts
+
+[lint.flake8-bugbear]
+extend-immutable-calls = [
+    # Typer function calls allowed in argument defaults
+    "typer.Argument",
+    "typer.Option",
+    "typer.Typer",
+]
+
+# Configure formatter
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
